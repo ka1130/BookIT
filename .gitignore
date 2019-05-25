@@ -11,6 +11,12 @@
 # production
 /build
 
+# macOS
+.Spotlight-V100/
+.Trashes/
+.DS_Store
+._*
+
 # misc
 .DS_Store
 .env.local
