@@ -37,6 +37,7 @@ const SelectHotel = props => {
 
   const filteredHotels = applyFilter(filters, hotels);
   const sortedHotels = applySort(filteredHotels, sortField);
+  const countedHotels = countHotelsByBedType(hotels);
 
   return (
     <Container>
@@ -47,7 +48,7 @@ const SelectHotel = props => {
             isChartVisible={chartVisible}
             switchChartVisible={() => setChartVisible(!chartVisible)}
           />
-          <Filters count={filters} onChange={changeFilters} />
+          <Filters count={countedHotels} onChange={changeFilters} />
         </Layout.Sidebar>
         <Layout.Feed isLoading={loading}>
           {chartVisible && (
