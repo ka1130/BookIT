@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Button, Table, Divider, Container, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-
+import { completeBooking, closeSummary } from '../reducers';
 import HotelsList from './HotelsList';
+import * as booking from '../selectors';
 
 const ConfirmBooking = ({
   complete,
   loading,
-  close,
   isComplete,
   isSuccess,
   isFailure,
@@ -84,4 +84,22 @@ const ConfirmBooking = ({
   );
 };
 
-export default ConfirmBooking;
+const mapDispatchToProps = dispatch => {
+  return {
+    complete: booking => dispatch(completeBooking(booking)),
+    close: () => dispatch(closeSummary()),
+  };
+};
+
+const mapStateToProps = state => ({
+  isComplete: booking.isBookingComplete(state),
+  isSuccess: booking.isBookingSuccess(state),
+  isFailure: booking.isBookingFailure(state),
+  error: booking.getBookingError(state),
+  loading: booking.isBookingInProgress(state),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ConfirmBooking);

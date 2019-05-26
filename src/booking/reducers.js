@@ -10,6 +10,7 @@ function booking(state = initState, action) {
       return state;
   }
 }
+
 export function closeSummary() {
   return { type: 'CLOSE_SUMMARY' };
 }

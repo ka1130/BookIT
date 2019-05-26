@@ -4,6 +4,7 @@ export const delay = ms =>
 const random_boolean = () => Math.random() >= 0.5;
 
 export async function reserveHotel() {
+  console.log('reserve');
   await delay(1500);
   return new Promise((resolve, reject) => {
     if (random_boolean()) {
