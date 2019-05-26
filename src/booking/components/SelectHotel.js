@@ -15,6 +15,7 @@ const SelectHotel = props => {
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({});
   const [sortField, setSortField] = useState('price');
+  const [chartVisible, setChartVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,14 +41,18 @@ const SelectHotel = props => {
   return (
     <Container>
       <SortBar sortField={sortField} setField={value => setSortField(value)} />
-      {/* is the above arrow fn ok? */}
       <Layout>
         <Layout.Sidebar>
-          <ChartSwitcher isChartVisible={false} switchChartVisible={noop} />
+          <ChartSwitcher
+            isChartVisible={chartVisible}
+            switchChartVisible={() => setChartVisible(!chartVisible)}
+          />
           <Filters count={filters} onChange={changeFilters} />
         </Layout.Sidebar>
         <Layout.Feed isLoading={loading}>
-          {false && <RatingChart data={[]} />}
+          {chartVisible && (
+            <RatingChart data={prepareChartData(sortedHotels)} />
+          )}
           {loading ? (
             <Loader active inline="centered" />
           ) : (
