@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { Segment } from 'semantic-ui-react';
 import SelectHotel from './SelectHotel';
 
@@ -7,16 +7,35 @@ import ConfirmBooking from './ConfirmBooking';
 import BookingCompletionStatus from './BookingCompletionStatus';
 
 const BookingFlow = () => {
-  const step = 1;
+  const initialState = {
+    step: 1,
+    hotel: null,
+    paymentMethos: null,
+  };
+
+  const reducer = (state = initialState, action) => {
+    switch (action.type) {
+      case 'hotel':
+        const { hotel } = action.payload;
+        return { ...state, step: 2, hotel };
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const selectHotel = hotel => dispatch({ type: 'hotel', payload: { hotel } });
+
   return (
     <>
       <Section>
-        <BookingCompletionStatus step={step} />
+        <BookingCompletionStatus step={state.step} />
       </Section>
       <Section>
-        {step === 1 && <SelectHotel />}
-        {step === 2 && <SelectPaymentMethod />}
-        {step === 3 && <ConfirmBooking />}
+        {state.step === 1 && <SelectHotel selectHotel={selectHotel} />}
+        {state.step === 2 && <SelectPaymentMethod hotel={state.hotel} />}
+        {state.step === 3 && <ConfirmBooking />}
       </Section>
     </>
   );

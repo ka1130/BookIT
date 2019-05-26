@@ -13,10 +13,15 @@ import Filters from './Filters';
 import SortBar from './SortBar';
 import HotelsList from './HotelsList';
 import ChartSwitcher from './ChartSwitcher';
-// import RatingChart from './RatingChart';
 import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
+import lazyWithPreload from '../../utils/lazyWithPreload';
 
-const RatingChart = lazy(() => import('./RatingChart'));
+// lazy loading: when we don't know if user will click on chart
+// maybe it's not necessary at all?
+// const RatingChart = lazy(() => import('./RatingChart'));
+
+// Preloaded chart version: if we are sure user will click on chart
+const RatingChart = lazyWithPreload(() => import('./RatingChart'));
 
 const SelectHotel = props => {
   const [hotels, setHotels] = useState([]);
@@ -31,6 +36,7 @@ const SelectHotel = props => {
       const result = await axios(ONLINE_URL);
       setHotels(result.data.list.slice(0, 20));
       setLoading(false);
+      RatingChart.preload();
     };
     fetchData();
   }, []);
@@ -50,10 +56,12 @@ const SelectHotel = props => {
     filters,
     hotels,
   ]);
+
   const sortedHotels = useMemo(() => applySort(filteredHotels, sortField), [
     filteredHotels,
     sortField,
   ]);
+
   const countedHotels = useMemo(() => countHotelsByBedType(hotels), [hotels]);
 
   const chartData = useMemo(() => prepareChartData(filteredHotels), [
@@ -73,14 +81,14 @@ const SelectHotel = props => {
         </Layout.Sidebar>
         <Layout.Feed isLoading={loading}>
           {chartVisible && (
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={<div>Loading...</div>}>
               <RatingChart data={chartData} />
             </Suspense>
           )}
           {loading ? (
             <Loader active inline="centered" />
           ) : (
-            <HotelsList hotels={sortedHotels} selectHotel={noop} />
+            <HotelsList hotels={sortedHotels} selectHotel={props.selectHotel} />
           )}
         </Layout.Feed>
       </Layout>
