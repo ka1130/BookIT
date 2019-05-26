@@ -12,16 +12,17 @@ import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
 
 const SelectHotel = props => {
   const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get(ONLINE_URL).then(res => setHotels(res.data.list));
+    const fetchData = async () => {
+      setLoading(true);
+      const result = await axios(ONLINE_URL);
+      setHotels(result.data.list.slice(0, 20));
+      setLoading(false);
+    };
+    fetchData();
   }, []);
-
-  const hotelsList = () => {
-    if (hotels.length > 20) {
-      return hotels.slice(0, 20);
-    } else return hotels;
-  };
 
   return (
     <Container>
@@ -31,12 +32,12 @@ const SelectHotel = props => {
           <ChartSwitcher isChartVisible={false} switchChartVisible={noop} />
           <Filters count={{}} onChange={noop} />
         </Layout.Sidebar>
-        <Layout.Feed isLoading={true}>
+        <Layout.Feed isLoading={loading}>
           {false && <RatingChart data={[]} />}
-          {false ? (
+          {loading ? (
             <Loader active inline="centered" />
           ) : (
-            <HotelsList hotels={hotelsList()} selectHotel={noop} />
+            <HotelsList hotels={hotels} selectHotel={noop} />
           )}
         </Layout.Feed>
       </Layout>
