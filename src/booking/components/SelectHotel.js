@@ -11,6 +11,18 @@ import RatingChart from './RatingChart';
 import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
 
 const SelectHotel = props => {
+  const [hotels, setHotels] = useState([]);
+
+  useEffect(() => {
+    axios.get(ONLINE_URL).then(res => setHotels(res.data.list));
+  }, []);
+
+  const hotelsList = () => {
+    if (hotels.length > 20) {
+      return hotels.slice(0, 20);
+    } else return hotels;
+  };
+
   return (
     <Container>
       <SortBar sortField={'price'} setField={noop} />
@@ -24,7 +36,7 @@ const SelectHotel = props => {
           {false ? (
             <Loader active inline="centered" />
           ) : (
-            <HotelsList hotels={[]} selectHotel={noop} />
+            <HotelsList hotels={hotelsList()} selectHotel={noop} />
           )}
         </Layout.Feed>
       </Layout>
@@ -58,6 +70,7 @@ function prepareChartData(hotels) {
     name: h.title,
   }));
 }
+
 const sortHotels = {
   price: (a, b) => a.price.amount - b.price.amount,
   rating: (a, b) => b.rating.average - a.rating.average,
@@ -73,6 +86,7 @@ const Layout = ({ children }) => (
     <Grid.Row>{children}</Grid.Row>
   </Grid>
 );
+
 const Sidebar = ({ children }) => (
   <Grid.Column width={4}>{children}</Grid.Column>
 );
