@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Button, Item, Label, Rating } from 'semantic-ui-react';
 import HotelDemand from './HotelDemand';
 import VanillaTilt from 'vanilla-tilt';
 
 const HotelCard = props => {
   const { hotel, selectHotel } = props;
+  const tiltRef = useRef();
+
+  useEffect(() => {
+    VanillaTilt.init(tiltRef.current);
+    const node = tiltRef.current;
+    return () => node.vanillaTilt.destroy();
+  }, []);
+
   return (
     <Item>
       <Item.Image src={`https://picsum.photos/175?random=${hotel.id}`} />
@@ -19,6 +27,7 @@ const HotelCard = props => {
           }}
         >
           <div
+            ref={tiltRef}
             style={{
               float: 'right',
             }}
