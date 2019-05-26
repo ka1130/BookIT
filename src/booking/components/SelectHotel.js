@@ -14,6 +14,7 @@ const SelectHotel = props => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({});
+  const [sortField, setSortField] = useState('price');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,11 +34,13 @@ const SelectHotel = props => {
     setFilters(newFilters);
   };
 
-  console.log(filters);
+  const filteredHotels = applyFilter(filters, hotels);
+  const sortedHotels = applySort(filteredHotels, sortField);
 
   return (
     <Container>
-      <SortBar sortField={'price'} setField={noop} />
+      <SortBar sortField={sortField} setField={value => setSortField(value)} />
+      {/* is the above arrow fn ok? */}
       <Layout>
         <Layout.Sidebar>
           <ChartSwitcher isChartVisible={false} switchChartVisible={noop} />
@@ -48,10 +51,7 @@ const SelectHotel = props => {
           {loading ? (
             <Loader active inline="centered" />
           ) : (
-            <HotelsList
-              hotels={applyFilter(filters, hotels)}
-              selectHotel={noop}
-            />
+            <HotelsList hotels={sortedHotels} selectHotel={noop} />
           )}
         </Layout.Feed>
       </Layout>
