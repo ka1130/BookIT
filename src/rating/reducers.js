@@ -17,7 +17,13 @@ const ratings = (state = initState, action) => {
   }
 };
 
-export const getHotelForRating = () => ({});
+export const getHotelForRating = () => ({
+  [RSAA]: {
+    endpoint: ONLINE_URL,
+    method: 'GET',
+    types: ['RATING_REQUEST', 'RATING_SUCCESS', 'RATING_ERROR'],
+  },
+});
 
 export const rateHotel = (id, rating) => ({
   type: 'RATE_HOTEL',

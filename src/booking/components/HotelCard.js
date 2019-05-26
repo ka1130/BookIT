@@ -8,8 +8,8 @@ const HotelCard = props => {
   const tiltRef = useRef();
 
   useEffect(() => {
-    VanillaTilt.init(tiltRef.current);
     const node = tiltRef.current;
+    VanillaTilt.init(node);
     return () => node.vanillaTilt.destroy();
   }, []);
 
