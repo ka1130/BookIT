@@ -14,6 +14,7 @@ const ConfirmBooking = ({
   error,
   hotel,
   paymentMethod,
+  resetBooking,
 }) => {
   return (
     <Container text>
@@ -38,7 +39,6 @@ const ConfirmBooking = ({
               + {(+hotel.price.amount * 0.08).toFixed(2)} zł
             </Table.Cell>
           </Table.Row>
-
           <Table.Row>
             <Table.Cell>
               <strong>Suma</strong>
@@ -76,14 +76,12 @@ const ConfirmBooking = ({
           Zarezerwuj
         </Button>
       )}
-      <Button onClick={() => noop()} floated="left">
+      <Button onClick={() => resetBooking()} floated="left">
         Powrót do listy hoteli
       </Button>
       <Divider hidden fitted clearing />
     </Container>
   );
 };
-
-const noop = () => {};
 
 export default ConfirmBooking;

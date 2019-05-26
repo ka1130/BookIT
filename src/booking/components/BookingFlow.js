@@ -1,7 +1,6 @@
 import React, { useReducer } from 'react';
 import { Segment } from 'semantic-ui-react';
 import SelectHotel from './SelectHotel';
-
 import SelectPaymentMethod from './SelectPaymentMethod';
 import ConfirmBooking from './ConfirmBooking';
 import BookingCompletionStatus from './BookingCompletionStatus';
@@ -21,6 +20,8 @@ const BookingFlow = () => {
       case 'paymentMethod':
         const { paymentMehod } = action.payload;
         return { ...state, step: 3, paymentMehod };
+      case 'reset':
+        return initialState;
       default:
         return state;
     }
@@ -32,6 +33,7 @@ const BookingFlow = () => {
   const selectPaymentMethod = paymentMehod => {
     dispatch({ type: 'paymentMethod', payload: { paymentMehod } });
   };
+  const resetBooking = () => dispatch({ type: 'reset' });
 
   const { step, hotel, paymentMethod } = state;
 
@@ -49,7 +51,11 @@ const BookingFlow = () => {
           />
         )}
         {step === 3 && (
-          <ConfirmBooking paymentMethod={paymentMethod} hotel={hotel} />
+          <ConfirmBooking
+            paymentMethod={paymentMethod}
+            hotel={hotel}
+            resetBooking={resetBooking}
+          />
         )}
       </Section>
     </>
