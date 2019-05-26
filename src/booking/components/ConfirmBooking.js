@@ -12,6 +12,8 @@ const ConfirmBooking = ({
   isSuccess,
   isFailure,
   error,
+  hotel,
+  paymentMethod,
 }) => {
   return (
     <Container text>
@@ -21,19 +23,19 @@ const ConfirmBooking = ({
           <Table.Row>
             <Table.Cell>Forma płatności</Table.Cell>
             <Table.Cell collapsing textAlign="right">
-              {/* {paymentMethod} */}
+              {paymentMethod}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Cena z pokój</Table.Cell>
             <Table.Cell collapsing textAlign="right">
-              {/* {hotel.price.amount} zł */}
+              {hotel.price.amount} zł
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Podatek VAT 8%</Table.Cell>
             <Table.Cell collapsing textAlign="right">
-              {/* + {(+hotel.price.amount * 0.08).toFixed(2)} zł */}
+              + {(+hotel.price.amount * 0.08).toFixed(2)} zł
             </Table.Cell>
           </Table.Row>
 
@@ -43,7 +45,7 @@ const ConfirmBooking = ({
             </Table.Cell>
             <Table.Cell collapsing textAlign="right">
               <strong>
-                {/* {(+hotel.price.amount + +hotel.price.amount * 0.08).toFixed(2)}{' '} */}
+                {(+hotel.price.amount + +hotel.price.amount * 0.08).toFixed(2)}{' '}
                 zł
               </strong>
             </Table.Cell>

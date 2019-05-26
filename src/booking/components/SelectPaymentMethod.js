@@ -8,15 +8,15 @@ import {
 } from 'semantic-ui-react';
 import HotelsList from './HotelsList';
 
-const SelectPaymentMethod = () => {
-  const value = '';
+const SelectPaymentMethod = props => {
+  const [value, setValue] = useState('');
   return (
     <Container text>
       <HotelsList hotels={[]} />
       <Header as="h3">Wybierz formę płatności:</Header>
       <Dropdown
         placeholder="forma płatności..."
-        onChange={(e, { value }) => noop(value)}
+        onChange={(e, { value }) => setValue(value)}
         fluid
         value={value}
         selection
@@ -25,7 +25,7 @@ const SelectPaymentMethod = () => {
       <Divider hidden />
       <Button
         disabled={!value}
-        onClick={() => noop(value)}
+        onClick={() => props.selectPaymentMethod(value)}
         primary
         floated="right"
       >

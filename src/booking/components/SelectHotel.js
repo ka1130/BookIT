@@ -96,8 +96,6 @@ const SelectHotel = props => {
   );
 };
 
-const noop = () => {};
-
 function countHotelsByBedType(data) {
   return data.reduce(function(acc, v) {
     acc[v.room] = acc[v.room] ? acc[v.room] + 1 : 1;
