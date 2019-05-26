@@ -13,6 +13,7 @@ import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
 const SelectHotel = props => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,20 +25,33 @@ const SelectHotel = props => {
     fetchData();
   }, []);
 
+  const changeFilters = (value, checked) => {
+    const newFilters = {
+      ...filters,
+      [value]: checked,
+    };
+    setFilters(newFilters);
+  };
+
+  console.log(filters);
+
   return (
     <Container>
       <SortBar sortField={'price'} setField={noop} />
       <Layout>
         <Layout.Sidebar>
           <ChartSwitcher isChartVisible={false} switchChartVisible={noop} />
-          <Filters count={{}} onChange={noop} />
+          <Filters count={filters} onChange={changeFilters} />
         </Layout.Sidebar>
         <Layout.Feed isLoading={loading}>
           {false && <RatingChart data={[]} />}
           {loading ? (
             <Loader active inline="centered" />
           ) : (
-            <HotelsList hotels={hotels} selectHotel={noop} />
+            <HotelsList
+              hotels={applyFilter(filters, hotels)}
+              selectHotel={noop}
+            />
           )}
         </Layout.Feed>
       </Layout>
