@@ -1,4 +1,11 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, {
+  lazy,
+  Suspense,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import axios from 'axios';
 import { Grid, Loader, Container } from 'semantic-ui-react';
 
@@ -6,9 +13,10 @@ import Filters from './Filters';
 import SortBar from './SortBar';
 import HotelsList from './HotelsList';
 import ChartSwitcher from './ChartSwitcher';
-import RatingChart from './RatingChart';
-
+// import RatingChart from './RatingChart';
 import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
+
+const RatingChart = lazy(() => import('./RatingChart'));
 
 const SelectHotel = props => {
   const [hotels, setHotels] = useState([]);
@@ -27,17 +35,30 @@ const SelectHotel = props => {
     fetchData();
   }, []);
 
-  const changeFilters = (value, checked) => {
-    const newFilters = {
-      ...filters,
-      [value]: checked,
-    };
-    setFilters(newFilters);
-  };
+  const setBedtypeFilter = useCallback(
+    (value, checked) => {
+      const newFilters = {
+        ...filters,
+        [value]: checked,
+      };
+      setFilters(newFilters);
+    },
+    [filters]
+  );
 
-  const filteredHotels = applyFilter(filters, hotels);
-  const sortedHotels = applySort(filteredHotels, sortField);
-  const countedHotels = countHotelsByBedType(hotels);
+  const filteredHotels = useMemo(() => applyFilter(filters, hotels), [
+    filters,
+    hotels,
+  ]);
+  const sortedHotels = useMemo(() => applySort(filteredHotels, sortField), [
+    filteredHotels,
+    sortField,
+  ]);
+  const countedHotels = useMemo(() => countHotelsByBedType(hotels), [hotels]);
+
+  const chartData = useMemo(() => prepareChartData(filteredHotels), [
+    filteredHotels,
+  ]);
 
   return (
     <Container>
@@ -46,13 +67,15 @@ const SelectHotel = props => {
         <Layout.Sidebar>
           <ChartSwitcher
             isChartVisible={chartVisible}
-            switchChartVisible={() => setChartVisible(!chartVisible)}
+            switchChartVisible={setChartVisible}
           />
-          <Filters count={countedHotels} onChange={changeFilters} />
+          <Filters count={countedHotels} onChange={setBedtypeFilter} />
         </Layout.Sidebar>
         <Layout.Feed isLoading={loading}>
           {chartVisible && (
-            <RatingChart data={prepareChartData(sortedHotels)} />
+            <Suspense fallback={<div>loading...</div>}>
+              <RatingChart data={chartData} />
+            </Suspense>
           )}
           {loading ? (
             <Loader active inline="centered" />

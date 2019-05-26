@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   ScatterChart,
   Scatter,
@@ -39,7 +39,7 @@ const Example = ({ data }) => (
   </ResponsiveContainer>
 );
 
-export default Example;
+export default memo(Example);
 
 const CustomTooltip = props => {
   const { active, payload } = props;
